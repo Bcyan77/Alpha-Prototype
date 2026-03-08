@@ -8,6 +8,7 @@ export function useQuiz() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const [direction, setDirection] = useState<1 | -1>(1);
 
   const totalQuestions = QUESTIONS.length;
@@ -16,6 +17,8 @@ export function useQuiz() {
 
   const selectAnswer = useCallback(
     async (answerIndex: number): Promise<QuizSubmitResponse | null> => {
+      if (isSubmitting) return null;
+
       const newAnswers = [...answers];
       newAnswers[currentIndex] = answerIndex;
       setAnswers(newAnswers);
@@ -35,12 +38,17 @@ export function useQuiz() {
           return null;
         }
       } else {
+        if (isAnimating) return null;
+        setIsAnimating(true);
         setDirection(1);
-        setTimeout(() => setCurrentIndex((i) => i + 1), 300);
+        setTimeout(() => {
+          setCurrentIndex((i) => i + 1);
+          setIsAnimating(false);
+        }, 300);
         return null;
       }
     },
-    [answers, currentIndex, isLastQuestion]
+    [answers, currentIndex, isLastQuestion, isAnimating, isSubmitting]
   );
 
   const goBack = useCallback(() => {
