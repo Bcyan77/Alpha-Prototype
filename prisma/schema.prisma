@@ -1,0 +1,25 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model QuizSession {
+  id            String     @id @default(cuid())
+  answers       String     // JSON: "[0,2,1,4,3]"
+  matchedMember String
+  createdAt     DateTime   @default(now())
+  gameScore     GameScore?
+}
+
+model GameScore {
+  id        String      @id @default(cuid())
+  sessionId String      @unique
+  session   QuizSession @relation(fields: [sessionId], references: [id])
+  score     Int
+  nickname  String      @default("익명")
+  createdAt DateTime    @default(now())
+}
