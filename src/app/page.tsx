@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
 import { useStats } from "@/hooks/useStats";
 import { MEMBERS } from "@/lib/members-data";
@@ -78,16 +78,18 @@ function renderSlideContent(
 }
 
 export default function PresentationPage() {
-  const [state, setState] = useState({ current: 0, prev: -1, dir: 0 });
+  const [current, setCurrent] = useState(0);
+  const [dir, setDir] = useState(0);
   const { stats, connected } = useStats();
   const total = slides.length;
 
   const go = useCallback(
-    (dir: 1 | -1) => {
-      setState((s) => {
-        const next = s.current + dir;
-        if (next < 0 || next >= total) return s;
-        return { current: next, prev: s.current, dir };
+    (d: 1 | -1) => {
+      setCurrent((c) => {
+        const next = c + d;
+        if (next < 0 || next >= total) return c;
+        setDir(d);
+        return next;
       });
     },
     [total]
@@ -115,38 +117,20 @@ export default function PresentationPage() {
     >
       {/* 슬라이드 콘텐츠 */}
       <div className="relative flex flex-1 items-center justify-center overflow-hidden px-16">
-        {/* 퇴장 슬라이드 */}
-        {state.prev >= 0 && (
+        <AnimatePresence mode="wait" custom={dir}>
           <motion.div
-            key={`exit-${state.prev}-${state.dir}`}
-            initial={{ opacity: 1, x: 0 }}
-            animate={{ opacity: 0, x: state.dir * -100 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            onAnimationComplete={() =>
-              setState((s) => ({ ...s, prev: -1 }))
-            }
+            key={current}
+            custom={dir}
+            initial={{ opacity: 0, x: dir * 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: dir * -100 }}
+            transition={{ duration: 0.35, ease: "easeInOut" }}
             className="absolute flex w-full max-w-[90vw] flex-col items-center"
             onClick={(e) => e.stopPropagation()}
           >
-            {renderSlideContent(slides[state.prev], stats, connected)}
+            {renderSlideContent(slides[current], stats, connected)}
           </motion.div>
-        )}
-
-        {/* 진입 슬라이드 */}
-        <motion.div
-          key={`enter-${state.current}`}
-          initial={
-            state.dir !== 0
-              ? { opacity: 0, x: state.dir * 100 }
-              : false
-          }
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, ease: "easeInOut" }}
-          className="absolute flex w-full max-w-[90vw] flex-col items-center"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {renderSlideContent(slides[state.current], stats, connected)}
-        </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* 하단 네비게이션 */}
@@ -156,7 +140,7 @@ export default function PresentationPage() {
             e.stopPropagation();
             go(-1);
           }}
-          disabled={state.current === 0}
+          disabled={current === 0}
           className="rounded-full px-4 py-2 text-sm text-gray-400 transition-colors hover:text-white disabled:invisible"
         >
           ← 이전
@@ -168,14 +152,11 @@ export default function PresentationPage() {
               key={i}
               onClick={(e) => {
                 e.stopPropagation();
-                setState((s) => ({
-                  current: i,
-                  prev: s.current,
-                  dir: i > s.current ? 1 : -1,
-                }));
+                setDir(i > current ? 1 : -1);
+                setCurrent(i);
               }}
               className={`h-2 rounded-full transition-all ${
-                i === state.current
+                i === current
                   ? "w-6 bg-indigo-400"
                   : "w-2 bg-gray-600 hover:bg-gray-500"
               }`}
@@ -188,7 +169,7 @@ export default function PresentationPage() {
             e.stopPropagation();
             go(1);
           }}
-          disabled={state.current === total - 1}
+          disabled={current === total - 1}
           className="rounded-full px-4 py-2 text-sm text-gray-400 transition-colors hover:text-white disabled:invisible"
         >
           다음 →
