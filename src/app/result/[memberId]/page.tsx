@@ -8,6 +8,7 @@ import { useScrollDetect } from "@/hooks/useScrollDetect";
 import DinoGame from "@/components/game/DinoGame";
 import type { MemberId } from "@/types";
 import Link from "next/link";
+import Image from "next/image";
 
 const stagger = {
   hidden: { opacity: 0 },
@@ -76,79 +77,34 @@ export default function ResultPage({
           당신과 닮은 팀원은...
         </motion.p>
 
-        {/* 캐릭터 이미지 */}
+        {/* 팀원 프로필 이미지 */}
         <motion.div
           variants={fadeUp}
-          className="mt-4 flex h-48 w-48 items-center justify-center overflow-hidden rounded-3xl bg-indigo-100 shadow-lg"
+          className="mt-4 w-full overflow-hidden rounded-3xl shadow-lg"
         >
-          <div className="flex h-full w-full items-center justify-center text-6xl text-indigo-300">
-            {member.name[0]}
-          </div>
+          <Image
+            src={member.photo}
+            alt={member.name}
+            width={430}
+            height={430}
+            className="h-auto w-full"
+            priority
+          />
         </motion.div>
 
-        {/* 이름 + 한줄 소개 */}
-        <motion.h1
+        {/* 인스타그램 링크 */}
+        <motion.a
           variants={fadeUp}
-          className="mt-5 text-2xl font-bold text-gray-900"
+          href={`https://instagram.com/${member.instagram}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-5 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-opacity hover:opacity-90"
         >
-          {member.name}
-        </motion.h1>
-        <motion.p variants={fadeUp} className="mt-1 text-sm text-gray-500">
-          {member.oneLiner}
-        </motion.p>
-
-        {/* MBTI 태그 */}
-        <motion.div variants={fadeUp} className="mt-4">
-          <span className="inline-block rounded-full bg-indigo-500 px-4 py-1.5 text-sm font-bold text-white shadow-sm">
-            {member.mbti}
-          </span>
-        </motion.div>
-
-        {/* 특징 리스트 */}
-        <motion.ul
-          variants={fadeUp}
-          className="mt-6 w-full space-y-2.5 rounded-2xl bg-white p-5 shadow-sm"
-        >
-          {member.traits.map((trait, i) => (
-            <li
-              key={i}
-              className="flex items-start gap-2 text-[15px] text-gray-700"
-            >
-              <span className="mt-0.5 text-indigo-400">•</span>
-              {trait}
-            </li>
-          ))}
-        </motion.ul>
-
-        {/* 스킬 태그 */}
-        {member.skills.length > 0 && (
-          <motion.div
-            variants={fadeUp}
-            className="mt-4 flex flex-wrap justify-center gap-2"
-          >
-            {member.skills.map((skill) => (
-              <span
-                key={skill}
-                className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600"
-              >
-                {skill}
-              </span>
-            ))}
-          </motion.div>
-        )}
-
-        {/* 추구 방향 */}
-        {member.direction && (
-          <motion.div
-            variants={fadeUp}
-            className="mt-4 w-full rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500 p-4 text-center shadow-sm"
-          >
-            <p className="text-xs font-medium text-indigo-100">추구 방향</p>
-            <p className="mt-1 text-sm font-bold text-white">
-              {member.direction}
-            </p>
-          </motion.div>
-        )}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+          </svg>
+          @{member.instagram}
+        </motion.a>
 
         {/* 팀원 전체 보기 링크 */}
         <motion.div variants={fadeUp} className="mt-6">
