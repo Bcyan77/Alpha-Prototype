@@ -26,7 +26,7 @@ type Slide =
 const slides: Slide[] = [
   { type: "landing" },
   { type: "stats" },
-  { type: "title", title: "Alpha Team", subtitle: "다양한 배경, 하나의 방향" },
+  { type: "title", title: "Team Fossil", subtitle: "다양한 배경, 하나의 방향" },
   ...MEMBER_IDS.map(
     (id) => ({ type: "member" as const, memberId: id })
   ),
@@ -213,7 +213,7 @@ function LandingSlide() {
       <div className="text-center">
         <h1 className="text-6xl font-black tracking-tight">
           <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Alpha Team
+            Alpha Prototype
           </span>
         </h1>
         <p className="mt-3 text-lg text-gray-400">인터랙티브 팀 소개</p>
