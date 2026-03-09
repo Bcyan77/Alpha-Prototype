@@ -18,8 +18,8 @@ const DINO_H = 36;
 const OBSTACLE_W = 18;
 const OBSTACLE_MIN_H = 24;
 const OBSTACLE_MAX_H = 44;
-const INITIAL_SPEED = 4;
-const SPEED_INCREMENT = 0.002;
+const INITIAL_SPEED = 2.67;
+const SPEED_INCREMENT = 0.0013;
 const MIN_SPAWN_INTERVAL = 60;
 const MAX_SPAWN_INTERVAL = 120;
 
@@ -90,14 +90,29 @@ export default function DinoGame({ sessionId, onScoreSubmit }: DinoGameProps) {
 
   // 터치/키 이벤트
   useEffect(() => {
+    const canvas = canvasRef.current;
+
     const handleKey = (e: KeyboardEvent) => {
       if (e.code === "Space" || e.code === "ArrowUp") {
         e.preventDefault();
         handleInteraction();
       }
     };
+
+    const handleTouch = (e: TouchEvent) => {
+      e.preventDefault();
+      handleInteraction();
+    };
+
     window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
+    canvas?.addEventListener("touchstart", handleTouch, { passive: false });
+    canvas?.addEventListener("mousedown", handleInteraction);
+
+    return () => {
+      window.removeEventListener("keydown", handleKey);
+      canvas?.removeEventListener("touchstart", handleTouch);
+      canvas?.removeEventListener("mousedown", handleInteraction);
+    };
   }, [handleInteraction]);
 
   // 게임 루프
@@ -161,9 +176,7 @@ export default function DinoGame({ sessionId, onScoreSubmit }: DinoGameProps) {
         ctx.fillStyle = "#6b7280";
         ctx.font = "bold 16px sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText("터치하여 시작!", CANVAS_W / 2, CANVAS_H / 2 - 20);
-        ctx.font = "12px sans-serif";
-        ctx.fillText("또는 스페이스바", CANVAS_W / 2, CANVAS_H / 2);
+        ctx.fillText("터치하여 시작!", CANVAS_W / 2, CANVAS_H / 2 - 10);
       } else if (state === "playing") {
         // 물리
         velYRef.current += GRAVITY;
@@ -291,11 +304,6 @@ export default function DinoGame({ sessionId, onScoreSubmit }: DinoGameProps) {
         width={CANVAS_W}
         height={CANVAS_H}
         className="w-full max-w-[360px] rounded-xl border-2 border-gray-200 bg-gray-50"
-        onTouchStart={(e) => {
-          e.preventDefault();
-          handleInteraction();
-        }}
-        onClick={handleInteraction}
         style={{ touchAction: "none" }}
       />
 
