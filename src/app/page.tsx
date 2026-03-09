@@ -7,6 +7,7 @@ import { useStats } from "@/hooks/useStats";
 import { MEMBERS } from "@/lib/members-data";
 import { MEMBER_IDS } from "@/lib/members-data";
 import type { StatsData, MemberId } from "@/types";
+import Image from "next/image";
 
 // --- 슬라이드 정의 ---
 
@@ -14,7 +15,7 @@ type Slide =
   | { type: "landing" }
   | { type: "stats" }
   | { type: "title"; title: string; subtitle: string }
-  | { type: "member"; memberId: string }
+  | { type: "members" }
   | { type: "direction"; title: string; items: string[] }
   | {
       type: "milestone";
@@ -27,9 +28,7 @@ const slides: Slide[] = [
   { type: "landing" },
   { type: "stats" },
   { type: "title", title: "Team Fossil", subtitle: "다양한 배경, 하나의 방향" },
-  ...MEMBER_IDS.map(
-    (id) => ({ type: "member" as const, memberId: id })
-  ),
+  { type: "members" },
   {
     type: "direction",
     title: "팀 방향성",
@@ -69,8 +68,8 @@ function renderSlideContent(
       return <StatsSlide stats={stats} connected={connected} />;
     case "title":
       return <TitleSlide slide={slide} />;
-    case "member":
-      return <MemberSlide memberId={slide.memberId} />;
+    case "members":
+      return <MembersSlide />;
     case "direction":
       return <DirectionSlide slide={slide} />;
     case "milestone":
@@ -126,7 +125,7 @@ export default function PresentationPage() {
             onAnimationComplete={() =>
               setState((s) => ({ ...s, prev: -1 }))
             }
-            className="absolute flex w-full max-w-5xl flex-col items-center"
+            className="absolute flex w-full max-w-[90vw] flex-col items-center"
             onClick={(e) => e.stopPropagation()}
           >
             {renderSlideContent(slides[state.prev], stats, connected)}
@@ -143,7 +142,7 @@ export default function PresentationPage() {
           }
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
-          className="absolute flex w-full max-w-5xl flex-col items-center"
+          className="absolute flex w-full max-w-[90vw] flex-col items-center"
           onClick={(e) => e.stopPropagation()}
         >
           {renderSlideContent(slides[state.current], stats, connected)}
@@ -410,55 +409,63 @@ function TitleSlide({
   );
 }
 
-function MemberSlide({ memberId }: { memberId: string }) {
-  const member = MEMBERS[memberId as MemberId];
-
+function MembersSlide() {
   return (
-    <div className="flex w-full items-center gap-16">
-      <div className="flex h-72 w-72 shrink-0 items-center justify-center rounded-3xl border border-white/10 bg-gradient-to-br from-indigo-500/20 to-purple-500/20">
-        <span className="text-8xl font-black text-indigo-400/50">
-          {member.name[0]}
+    <div className="w-full">
+      <h2 className="mb-3 text-center text-4xl font-black">
+        <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+          팀원 소개
         </span>
-      </div>
+      </h2>
+      <div className="flex w-full gap-4">
+        {MEMBER_IDS.map((id, i) => {
+          const member = MEMBERS[id];
+          return (
+            <motion.div
+              key={id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="flex flex-1 flex-col items-center gap-2"
+            >
+              <div className="w-full overflow-hidden rounded-2xl bg-white">
+                <Image
+                  src={member.photo}
+                  alt={member.name}
+                  width={300}
+                  height={300}
+                  className="max-h-[75vh] w-full object-contain"
+                />
+              </div>
 
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-4">
-          <h2 className="text-4xl font-black text-white">{member.name}</h2>
-          <span className="rounded-full bg-indigo-500 px-4 py-1 text-sm font-bold">
-            {member.mbti}
-          </span>
-        </div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-lg font-bold text-white">{member.name}</h3>
+                <span className="rounded-full bg-indigo-500 px-2.5 py-0.5 text-xs font-bold">
+                  {member.mbti}
+                </span>
+              </div>
 
-        <p className="text-lg text-gray-400">{member.oneLiner}</p>
+              {member.skills.length > 0 && (
+                <div className="flex flex-wrap justify-center gap-1">
+                  {member.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-medium text-gray-300"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              )}
 
-        <ul className="mt-2 space-y-2">
-          {member.traits.map((trait, i) => (
-            <li key={i} className="flex items-start gap-2 text-gray-300">
-              <span className="mt-1 text-indigo-400">•</span>
-              {trait}
-            </li>
-          ))}
-        </ul>
-
-        {member.skills.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-2">
-            {member.skills.map((skill) => (
-              <span
-                key={skill}
-                className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-gray-300"
-              >
-                {skill}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {member.direction && (
-          <div className="mt-2 rounded-xl border border-white/10 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 px-5 py-3">
-            <p className="text-xs text-indigo-300">추구 방향</p>
-            <p className="mt-0.5 font-bold text-white">{member.direction}</p>
-          </div>
-        )}
+              {member.direction && (
+                <p className="text-center text-xs text-indigo-300">
+                  {member.direction}
+                </p>
+              )}
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   );
