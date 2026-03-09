@@ -62,31 +62,38 @@ async function getStats(): Promise<StatsData> {
 export async function GET() {
   const encoder = new TextEncoder();
 
+  let interval: NodeJS.Timeout;
+  let timeout: NodeJS.Timeout;
+  let closed = false;
+
   const stream = new ReadableStream({
     async start(controller) {
       const send = async () => {
+        if (closed) return;
         try {
           const stats = await getStats();
           controller.enqueue(
             encoder.encode(`data: ${JSON.stringify(stats)}\n\n`)
           );
         } catch {
-          // 에러 시 빈 데이터 전송
-          controller.enqueue(encoder.encode(`data: {}\n\n`));
+          // 에러 무시
         }
       };
 
-      // 즉시 첫 데이터 전송
       await send();
 
-      // 2초마다 갱신
-      const interval = setInterval(send, 2000);
+      interval = setInterval(send, 2000);
 
-      // 연결 종료 시 정리 (타임아웃으로 최대 10분)
-      setTimeout(() => {
+      timeout = setTimeout(() => {
+        closed = true;
         clearInterval(interval);
         controller.close();
       }, 600000);
+    },
+    cancel() {
+      closed = true;
+      clearInterval(interval);
+      clearTimeout(timeout);
     },
   });
 
