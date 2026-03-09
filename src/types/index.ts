@@ -11,6 +11,7 @@ export interface MemberProfile {
   cakeIcon: string;
   skills: string[];
   direction: string;
+  instagram: string;
 }
 
 export interface QuizQuestion {
