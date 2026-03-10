@@ -196,7 +196,6 @@ function LandingSlide() {
             Alpha Prototype
           </span>
         </h1>
-        <p className="mt-3 text-lg text-gray-400">인터랙티브 팀 소개</p>
       </div>
 
       <div className="rounded-3xl bg-white p-6 shadow-2xl shadow-indigo-500/20">
@@ -348,7 +347,7 @@ function StatsSlide({
       <div className="mt-6 flex justify-center gap-6">
         {stats.mostPicked && (
           <div className="rounded-xl bg-indigo-500/20 px-5 py-3">
-            <p className="text-xs text-indigo-300">가장 인기 많은 팀원</p>
+            <p className="text-xs text-indigo-300">가장 많은 유형</p>
             <p className="mt-1 text-base font-bold text-white">
               {stats.mostPicked.name}{" "}
               <span className="text-indigo-300">
@@ -359,7 +358,7 @@ function StatsSlide({
         )}
         {stats.leastPicked && (
           <div className="rounded-xl bg-purple-500/20 px-5 py-3">
-            <p className="text-xs text-purple-300">가장 희소한 팀원</p>
+            <p className="text-xs text-purple-300">가장 적은 유형</p>
             <p className="mt-1 text-base font-bold text-white">
               {stats.leastPicked.name}{" "}
               <span className="text-purple-300">
