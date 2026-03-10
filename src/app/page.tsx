@@ -313,7 +313,7 @@ function StatsSlide({
             <p className="text-sm text-gray-500">아직 기록이 없습니다</p>
           ) : (
             <div className="flex flex-col gap-2">
-              {stats.gameRanking.map((entry, i) => (
+              {stats.gameRanking.slice(0, 5).map((entry, i) => (
                 <div
                   key={i}
                   className={`flex items-center gap-3 rounded-xl px-4 py-2.5 ${i < 3 ? "bg-white/5" : ""}`}
