@@ -22,31 +22,38 @@ export function useStats() {
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    const es = new EventSource("/api/stats");
+    let es: EventSource;
+    let retryTimeout: NodeJS.Timeout;
 
-    es.onopen = () => setConnected(true);
+    const connect = () => {
+      es = new EventSource("/api/stats");
 
-    es.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data) as StatsData;
-        if (data.totalParticipants !== undefined) {
-          setStats(data);
+      es.onopen = () => setConnected(true);
+
+      es.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data) as StatsData;
+          if (data.totalParticipants !== undefined) {
+            setStats(data);
+          }
+        } catch {
+          // 파싱 실패 무시
         }
-      } catch {
-        // 파싱 실패 무시
-      }
-    };
+      };
 
-    es.onerror = () => {
-      setConnected(false);
-      es.close();
-      // 3초 후 재연결
-      setTimeout(() => {
+      es.onerror = () => {
         setConnected(false);
-      }, 3000);
+        es.close();
+        retryTimeout = setTimeout(connect, 3000);
+      };
     };
 
-    return () => es.close();
+    connect();
+
+    return () => {
+      es?.close();
+      clearTimeout(retryTimeout);
+    };
   }, []);
 
   return { stats, connected };
