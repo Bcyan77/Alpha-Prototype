@@ -14,7 +14,7 @@ COPY . .
 RUN npx prisma generate
 RUN npm run build
 # 빌드 시 템플릿 DB 생성
-ENV DATABASE_URL="file:./prisma/dev.db"
+ENV DATABASE_URL="file:./dev.db"
 RUN npx prisma db push
 RUN mv ./prisma/dev.db ./prisma/template.db
 
@@ -22,6 +22,7 @@ RUN mv ./prisma/dev.db ./prisma/template.db
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+ENV DATABASE_URL="file:./dev.db"
 
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static

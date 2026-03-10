@@ -21,8 +21,6 @@ services:
       - "3000:3000"
     volumes:
       - db-data:/app/prisma
-    environment:
-      - DATABASE_URL=file:./prisma/dev.db
     restart: unless-stopped
     profiles:
       - prod
