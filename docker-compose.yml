@@ -20,7 +20,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - db-data:/app/prisma
+      - db-data:/data
     restart: unless-stopped
     profiles:
       - prod
