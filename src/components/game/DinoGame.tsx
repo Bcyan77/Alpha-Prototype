@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 
 interface DinoGameProps {
-  sessionId: string;
+  sessionId?: string;
   onScoreSubmit?: (rank: number, total: number) => void;
 }
 
@@ -81,7 +81,7 @@ export default function DinoGame({ sessionId, onScoreSubmit }: DinoGameProps) {
 
   const handleInteraction = useCallback(() => {
     const state = gameStateRef.current;
-    if (state === "idle") {
+    if (state === "idle" || state === "gameover" || state === "submitted") {
       startGame();
     } else if (state === "playing") {
       jump();
@@ -256,7 +256,10 @@ export default function DinoGame({ sessionId, onScoreSubmit }: DinoGameProps) {
         ctx.fillStyle = "#ef4444";
         ctx.font = "bold 18px sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText("Game Over", CANVAS_W / 2, CANVAS_H / 2 - 10);
+        ctx.fillText("Game Over", CANVAS_W / 2, CANVAS_H / 2 - 16);
+        ctx.fillStyle = "#6b7280";
+        ctx.font = "13px sans-serif";
+        ctx.fillText("터치하여 재시작", CANVAS_W / 2, CANVAS_H / 2 + 6);
       }
 
       animFrameRef.current = requestAnimationFrame(loop);
@@ -325,7 +328,7 @@ export default function DinoGame({ sessionId, onScoreSubmit }: DinoGameProps) {
             disabled={submitting || !nickname.trim()}
             className="rounded-xl bg-indigo-500 py-3 text-sm font-bold text-white transition-colors hover:bg-indigo-600 disabled:opacity-50"
           >
-            {submitting ? "제출 중..." : "점수 제출"}
+            {submitting ? "기록 중..." : "점수 기록"}
           </button>
         </div>
       )}

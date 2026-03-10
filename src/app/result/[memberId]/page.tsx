@@ -23,14 +23,14 @@ const fadeUp = {
   show: { opacity: 1, y: 0, transition: { duration: 0.4 } },
 };
 
-function GameSection({ sessionId }: { sessionId: string }) {
+function GameSection({ sessionId }: { sessionId?: string }) {
   const { ref, isVisible } = useScrollDetect(0.3);
 
   return (
     <motion.div variants={fadeUp} className="mt-12 w-full" ref={ref}>
       <div className="mb-4 text-center">
         <p className="text-sm font-bold text-gray-700">미니게임</p>
-        <p className="text-xs text-gray-400">장애물을 피하세요!</p>
+        <p className="text-xs text-gray-400">심심한 당신을 위해</p>
       </div>
       {isVisible ? (
         <DinoGame sessionId={sessionId} />
@@ -112,7 +112,7 @@ export default function ResultPage({
             href="/members"
             className="inline-flex items-center gap-1 rounded-full border-2 border-indigo-200 px-5 py-2.5 text-sm font-semibold text-indigo-600 transition-colors hover:bg-indigo-50"
           >
-            팀원 전체 보기
+            다른 유형 살펴보기
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path
                 d="M6 12L10 8L6 4"
@@ -126,7 +126,7 @@ export default function ResultPage({
         </motion.div>
 
         {/* 미니게임 */}
-        {sessionId && <GameSection sessionId={sessionId} />}
+        <GameSection sessionId={sessionId ?? undefined} />
       </motion.div>
     </div>
   );

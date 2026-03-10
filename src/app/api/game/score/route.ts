@@ -6,34 +6,41 @@ export async function POST(request: Request) {
   try {
     const { sessionId, score, nickname } = await request.json();
 
-    if (!sessionId || typeof score !== "number" || score < 0) {
+    if (typeof score !== "number" || score < 0) {
       return NextResponse.json(
         { error: "유효하지 않은 요청입니다." },
         { status: 400 }
       );
     }
 
-    // 세션 존재 확인
-    const session = await prisma.quizSession.findUnique({
-      where: { id: sessionId },
-    });
+    // sessionId가 있으면 기존 세션 사용, 없으면 게스트 세션 생성
+    let resolvedSessionId = sessionId;
 
-    if (!session) {
-      return NextResponse.json(
-        { error: "세션을 찾을 수 없습니다." },
-        { status: 404 }
-      );
+    if (resolvedSessionId) {
+      const session = await prisma.quizSession.findUnique({
+        where: { id: resolvedSessionId },
+      });
+      if (!session) {
+        resolvedSessionId = null;
+      }
+    }
+
+    if (!resolvedSessionId) {
+      const guestSession = await prisma.quizSession.create({
+        data: { answers: "[]", matchedMember: "guest" },
+      });
+      resolvedSessionId = guestSession.id;
     }
 
     // 기존 점수가 있으면 업데이트, 없으면 생성
     await prisma.gameScore.upsert({
-      where: { sessionId },
+      where: { sessionId: resolvedSessionId },
       update: {
         score,
         nickname: nickname || "익명",
       },
       create: {
-        sessionId,
+        sessionId: resolvedSessionId,
         score,
         nickname: nickname || "익명",
       },
