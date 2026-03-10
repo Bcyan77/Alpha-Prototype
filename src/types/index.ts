@@ -24,7 +24,7 @@ export interface QuizQuestion {
 export interface QuizAnswer {
   text: string;
   description: string;
-  memberId: MemberId;
+  memberId: MemberId | MemberId[];
 }
 
 export interface QuizSubmitRequest {

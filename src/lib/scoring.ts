@@ -15,7 +15,11 @@ export function calculateMatch(answers: number[]): MemberId {
     const question = QUESTIONS[questionIdx];
     if (question && question.answers[answerIdx]) {
       const memberId = question.answers[answerIdx].memberId;
-      scores[memberId] += 1;
+      if (Array.isArray(memberId)) {
+        memberId.forEach((id) => (scores[id] += 1));
+      } else {
+        scores[memberId] += 1;
+      }
     }
   });
 
@@ -29,6 +33,6 @@ export function validateAnswers(answers: unknown): answers is number[] {
   if (!Array.isArray(answers)) return false;
   if (answers.length !== QUESTIONS.length) return false;
   return answers.every(
-    (a) => typeof a === "number" && a >= 0 && a < QUESTIONS[0].answers.length
+    (a, i) => typeof a === "number" && a >= 0 && a < QUESTIONS[i].answers.length
   );
 }
