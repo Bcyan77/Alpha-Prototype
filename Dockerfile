@@ -13,6 +13,9 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npx prisma generate
 RUN npm run build
+# 빌드 시 템플릿 DB 생성
+RUN npx prisma db push
+RUN mv ./prisma/dev.db ./prisma/template.db
 
 # 실행
 FROM base AS runner
@@ -24,9 +27,7 @@ COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-
-COPY --from=builder /app/package.json ./package.json
-RUN npm install prisma @prisma/client --no-save
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
 EXPOSE 3000
-CMD ["sh", "-c", "npx prisma db push && node server.js"]
+CMD ["sh", "-c", "[ -f ./prisma/dev.db ] || cp ./prisma/template.db ./prisma/dev.db && node server.js"]
