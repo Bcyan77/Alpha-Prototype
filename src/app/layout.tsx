@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Alpha Team",
-  description: "인터랙티브 팀 소개",
+  description: "팀 소개",
 };
 
 export const viewport: Viewport = {

@@ -27,7 +27,7 @@ export default function MembersPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center text-xl font-bold text-gray-900"
         >
-          Alpha Team
+          성격 유형
         </motion.h1>
         <motion.p
           initial={{ opacity: 0 }}
@@ -35,7 +35,7 @@ export default function MembersPage() {
           transition={{ delay: 0.15 }}
           className="mt-1 text-center text-sm text-gray-500"
         >
-          팀원을 터치해서 자세히 알아보세요
+          터치해서 자세히 알아보세요
         </motion.p>
 
         <motion.div

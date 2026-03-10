@@ -13,7 +13,7 @@ export const MEMBERS: Record<MemberId, MemberProfile> = {
     id: "yeonjae",
     name: "김연재",
     mbti: "ISTP",
-    oneLiner: "한줄 자기소개", // TODO: 팀원 제공
+    oneLiner: "태어난김에 사는 천재만재연재",
     traits: [
       "미디어아트 로직 개발 전문 (유니티)",
       "다양한 개발 언어를 두루 경험",
@@ -32,7 +32,7 @@ export const MEMBERS: Record<MemberId, MemberProfile> = {
     id: "hongkyung",
     name: "김홍경",
     mbti: "ESFJ",
-    oneLiner: "한줄 자기소개", // TODO: 팀원 제공
+    oneLiner: "착한데 어디가 이상한 사람",
     traits: [
       "현실에 직시하고 빠르게 해결하는 편",
       "개발보다 디자인과 기획에 관심",
@@ -51,26 +51,26 @@ export const MEMBERS: Record<MemberId, MemberProfile> = {
     id: "hyerin",
     name: "황혜린",
     mbti: "INFP",
-    oneLiner: "한줄 자기소개", // TODO: 팀원 제공
+    oneLiner: "방구석 느좋 수집가",
     traits: [
-      "특징 1", // TODO: 팀원 제공
-      "특징 2",
-      "특징 3",
-      "특징 4",
-      "특징 5",
+      "포토샵부터 언리얼까지 다루는 만능 툴 장인",
+      "생성형 AI 구독권만 한가득인 AI 덕후",
+      "양산형 고래·꽃 미디어아트는 절대 사절",
+      "모두가 참여할 수 있는 인터랙티브 작품 추구",
+      "프로젝션 맵핑으로 공간을 연출하고 싶은 사람",
     ],
     photo: "/images/members/혜린@4x.png",
     character: "/images/characters/hyerin.png",
     cakeIcon: "/images/cake-icons/hyerin.png",
-    skills: [], // TODO: 확인 필요
-    direction: "", // TODO: 확인 필요
+    skills: ["Photoshop", "Illustrator", "After Effects", "Unreal", "TouchDesigner", "MadMapper"],
+    direction: "AI 활용 미디어아트 / 프로젝션 맵핑",
     instagram: "hyerinci",
   },
   sungjin: {
     id: "sungjin",
     name: "오성진",
     mbti: "INTP",
-    oneLiner: "한줄 자기소개", // TODO: 팀원 제공
+    oneLiner: "저전력 인간형 로봇",
     traits: [
       "T발 너 C야? 라는 말을 듣는 사람",
       "살면서 나보다 게으른 사람을 본적이 없다",
@@ -82,14 +82,14 @@ export const MEMBERS: Record<MemberId, MemberProfile> = {
     character: "/images/characters/sungjin.png",
     cakeIcon: "/images/cake-icons/sungjin.png",
     skills: ["Python", "C", "Unity", "Unreal", "AI", "Server/CI-CD"],
-    direction: "미디어 믹스 (게임/애니)",
+    direction: "미디어 믹스",
     instagram: "bcyan77",
   },
   hyunjun: {
     id: "hyunjun",
     name: "오현준",
     mbti: "INFJ",
-    oneLiner: "한줄 자기소개", // TODO: 팀원 제공
+    oneLiner: "망상력 만렙 낭만러",
     traits: [
       "특징 1", // TODO: 팀원 제공
       "특징 2",
@@ -101,7 +101,7 @@ export const MEMBERS: Record<MemberId, MemberProfile> = {
     character: "/images/characters/hyunjun.png",
     cakeIcon: "/images/cake-icons/hyunjun.png",
     skills: ["Unity", "Unreal", "Photoshop"],
-    direction: "손 인식 리듬 게임",
+    direction: "AI비전",
     instagram: "hyunjoon_2257",
   },
 };
